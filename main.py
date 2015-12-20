@@ -34,12 +34,17 @@ class DistanceField(object):
         nz = z + 2*math.cos(x/5.9)
         ny = y + math.sin(0.75 + x/7.8 + z/9.1)
 
+        nx = math.fmod(nx, 60)
+        nz = math.fmod(nz, 60)
+        ny = ny*8
         # Manhattan distance field to center of map: floating iceberg.
-        if abs(nx) + abs(nz) + abs(ny*8) < 64:
-            return c.MAT_SNOW
+        if math.sqrt(nx*nx + ny*ny + nz*nz) < 17:
+            return c.MAT_DIRT
 
         # Anything that's not solid but under the sea level?
-        if y < 0:
+        if y == -1:
+            return c.MAT_SNOW
+        if y < -1:
             return c.MAT_WATER
 
         return c.MAT_AIR
